@@ -1,4 +1,4 @@
 #!/bin/bash
 
 chmod 600 keys/id_rsa
-ssh -i keys/id_rsa -p 2222 vagrant@127.0.0.1
+ssh -i keys/id_rsa -p 2222 vagrant@127.0.0.1 $@
