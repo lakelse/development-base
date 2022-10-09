@@ -1,0 +1,56 @@
+---
+
+- name: Update the package sources list
+  apt:
+    update_cache: yes
+
+- name: Upgrade apt packages
+  apt:
+    upgrade: "yes"
+    cache_valid_time: 86400
+
+- name: Install development packages
+  apt:
+    pkg:
+      - acl # https://stackoverflow.com/a/56379678/825585 (Resolves 'Failed to set permissions on the temporary files...')
+      - build-essential
+      - tmux
+      - vim
+      - curl
+      - silversearcher-ag
+      - unzip
+      - net-tools
+      - python3-pip
+      - html2text
+      - ngrep
+      - git
+      - gpg
+      - npm
+      - x11-apps
+      - entr
+
+- name: Install grip
+  pip:
+    name: grip
+
+- name: Download vim setup and tmux conf
+  get_url:
+    url: "https://raw.githubusercontent.com/lakelse/lakelse.github.com/master/{{ item }}"
+    dest: "/home/{{ ansible_user }}/"
+    mode: '0644'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  with_items:
+    - .tmux.conf
+    - install_vim.sh
+
+- name: Setup vim
+  become_user: "{{ ansible_user }}"
+  command: "bash /home/{{ ansible_user }}/install_vim.sh"
+  args:
+    chdir: "/home/{{ ansible_user }}"
+    creates: "/home/{{ ansible_user }}/.vim"
+
+- name: Install composer
+  include_tasks: install-composer.yml
+

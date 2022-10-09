@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source bin/init.sh
+docker exec --user ansible -it $CONTAINER_NAME ansible "$@"
