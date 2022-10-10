@@ -44,5 +44,7 @@ then
   docker exec -it $CONTAINER_NAME sh -c "chmod 400 /home/ansible/.ssh/id_rsa && chown ansible:ansible -R /home/ansible"
 fi
 
-docker exec -it $CONTAINER_NAME sh -c "rsync -a /app/ansible* /home/ansible/src/ && chown ansible:ansible -R /home/ansible/src"
+RSYNC="rsync --archive --delete /app/ansible* /home/ansible/src/"
+docker exec -it $CONTAINER_NAME sh -c "$RSYNC && chown ansible:ansible -R /home/ansible/src"
 docker exec -it $CONTAINER_NAME sh -c "find /home/ansible/src -type d -exec chmod 755 {} \; && find /home/ansible/src/ -type f -exec chmod 644 {} \;"
+
